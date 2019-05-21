@@ -71,7 +71,6 @@ parser.add_argument('--sdm_init_transform_type', default = 'he-normal', type=str
                                                                                   'options:identity, '
                                                                                   'he-normal, he-uniform, '
                                                                                   'normal, xavier, lecun')
-# parser.add_argument('--share_all', default=1, type=int, help ='sharing weights among output in input memory')
 
 args = parser.parse_args()
 args.reg_sdp = eval(args.reg_sdp) 
