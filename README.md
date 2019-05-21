@@ -65,8 +65,8 @@ Best result: | test hits@10 = 0.833 | test ndcg@10 = 0.611 | epoch = 40
 ## Running SDMR model on ml1m dataset:
 **python -u main.py --cuda 1 --dataset ml1m --load_best_chkpoint 1 --model sdmr --num_factors 128 --reg_sdm 1e-3 --max_seq_len 5 --n_hops 3 --act_func_sdm tanh --out 1 --reg_sdp 1e-3 --act_func_sdp tanh  --epochs 20**
 
-## If you want to run SDMR in which parameters in SDP and SDM are retrained, but initialized with learned weights, then run:
-**python -u main.py --cuda 1 --dataset ml1m --load_best_chkpoint 1 --model sdmr --num_factors 128 --reg_sdm 1e-3 --max_seq_len 5 --n_hops 3 --act_func_sdm tanh --out 1 --reg_sdp 1e-3 --act_func_sdp tanh  --epochs 20 --sdmr_retrain 1**
+## If you want to run SDMR in which parameters in SDP and SDM are retrained, but initialized with learned weights, and probably just use identity activation, then run:
+**python -u main.py --cuda 1 --dataset ml1m --load_best_chkpoint 1 --model sdmr --num_factors 128 --reg_sdm 1e-3 --max_seq_len 5 --n_hops 3 --act_func_sdm tanh --out 1 --reg_sdp 1e-3 --act_func_sdp tanh  --act_func_sdmr none --epochs 20 --sdmr_retrain 1**
 
 # CITATION
 If you see that our paper is helpful or you have used some part of our source code, please cite our paper at:
