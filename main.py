@@ -74,7 +74,6 @@ parser.add_argument('--sdm_init_transform_type', default = 'he-normal', type=str
 # parser.add_argument('--share_all', default=1, type=int, help ='sharing weights among output in input memory')
 
 args = parser.parse_args()
-# args.layers = eval(args.layers)
 args.reg_sdp = eval(args.reg_sdp) 
 args.reg_sdm = eval(args.reg_sdm) 
 
@@ -82,13 +81,10 @@ args.reg_sdm = eval(args.reg_sdm)
 
 #save to global constant
 gc.BATCH_SIZE = args.batch_size
-#gc.DEBUG = bool(args.debug)
-# gc.SHARE_ALL = args.share_all
 gc.SEED = args.seed
 gc.model_type = args.model
 gc.SDM_INIT_TRANSFORM_TYPE = args.sdm_init_transform_type
 print 'SDM init type:', gc.SDM_INIT_TRANSFORM_TYPE
-#if gc.DEBUG: args.epochs=2
 #reuse from neural collaborative filtering
 def load_rating_file_as_list(filename):
     ratingList = []
