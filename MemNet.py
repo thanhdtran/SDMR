@@ -98,7 +98,7 @@ class MemoryModule(nn.Module):
 class OutputModule(nn.Module):
 
 
-    def __init__(self, embedding_size, distance_type = L2, dropout_prob=0.2, non_linear = None, sum_mapping=True, seq_size=None):
+    def __init__(self, embedding_size, distance_type = L2, dropout_prob=0.2, non_linear = None, sum_mapping=True):
         super(OutputModule, self).__init__()
         self._dist_func = L2_pow2_func if distance_type == L2 else L1_func
         self._dropout = nn.Dropout(p=dropout_prob)
@@ -134,19 +134,14 @@ class OutputModule(nn.Module):
 
         q_m = self._dropout(q_m)
 
-        # d2_q_m = -self._dist_func(q_m)
         d2_q_m = self._dist_func(q_m)
 
         weights_expand = weights.unsqueeze(2).expand_as(d2_q_m)
         dist_vec = torch.mul(d2_q_m, weights_expand)
-        #dist_vec_sum = dist_vec.sum(dim=1)# -sum{ alpha_k . DISTANCE( W2[ W1[u,j], i])    }
-                                        # negative because the higher the distance, the lower the attention score.
-                                        # dist_sum: batch x embedding_size, sum of the dist_vec_sum will return the total
-                                        # distance from target item j to all consumed items of target user u.
-        dist_vec_sum = F.relu(self._transform(dist_vec)).sum(dim = 1) #new: adding aggregation layer on March 18, 2019 instead of sum
+
+        dist_vec_sum = F.relu(self._transform(dist_vec)).sum(dim = 1) #new: adding aggregation layer instead of sum
         return -(dist_vec_sum)
-        # return -torch.abs(dist_vec_sum)
-        #return dist_vec_sum
+
 
 
 
@@ -209,14 +204,14 @@ class SDM(nn.Module):
         self._n_hops = n_hops
         self._dropout_prob = dropout_prob
         self._dropout = nn.Dropout(dropout_prob)
-        self._ret_sum = ret_sum #return some at the end of forward or not
+        self._ret_sum = ret_sum #return summation at the end of forward or not
 
         if nonlinear_func == 'relu': self._non_linear = F.relu
         elif nonlinear_func == 'tanh': self._non_linear = torch.tanh
         else: self._non_linear = None
 
         self._outputModule = OutputModule(embedding_size, dropout_prob=dropout_prob,
-                                          non_linear=self._non_linear, seq_size = item_seq_size)
+                                          non_linear=self._non_linear)
 
         self._attModule = MaskedAttention(dropout_prob=dropout_prob,
                                           non_linear=self._non_linear, embedding_size=embedding_size)
@@ -290,8 +285,7 @@ class SDM(nn.Module):
                 MemoryModule(
                     n_users, n_items, embedding_size,
                     item_seq_size, memory_size=None,
-                    user_embeddings=C_user_embeddings,#self.A_memories[-1]._user_embeddings, #C_user_embeddings,
-                                                      # #share same embeddings with A or not #not sharing is better
+                    user_embeddings=C_user_embeddings,
                     item_embeddings=C_item_embeddings,
                     item_biases = C_item_biases,
                     W1 = C_W1, W2 = C_W2,
@@ -369,7 +363,7 @@ class SDM(nn.Module):
             if prev_o:
                     #gated multiple-hop design
                     gated = torch.sigmoid(self._gate_transforms[i](o))
-                    q_a = torch.mul((1-gated), q_a) + torch.mul(gated, o) #residual connection.
+                    q_a = torch.mul((1-gated), q_a) + torch.mul(gated, o) #gated connection.
 
             W2 = A._W2
             weights = self._attModule(q_a, m_a, W2, mask)
@@ -380,9 +374,7 @@ class SDM(nn.Module):
 
             W1_output = C._W1
             q_o = self._make_output_query(c_u, c_j, W1_output) #output combination of target user u and target item j
-            #q_o = q_a #shared query in here, shared query is good for dense data, not good for sparse datasets.
 
-            # W2_output = self._W2
             W2_output = C._W2
             o = self._outputModule(weights, q_o, m_c, W2_output)
             hops_output.append((o, weights))
@@ -398,9 +390,6 @@ class SDM(nn.Module):
 
 
 class SDP(nn.Module):
-    '''
-    generalized metric matrix factorization method
-    '''
     def __init__(self, n_users, n_items, embedding_size=16, distance_type = 'l1', sum_mapping = True, ret_sum = True,
                  nonlinear_func='none', dropout_prob=0.2, num_layers = 1):
         super(SDP, self).__init__()
@@ -432,8 +421,6 @@ class SDP(nn.Module):
         self._dist_func = L2_pow2_func if distance_type == L2 else L1_func
 
         self._sum_func = nn.Linear(in_emb_size, 1) if sum_mapping else None
-        ###################################
-
         self._reset_weights()
 
     def _reset_weights(self):
