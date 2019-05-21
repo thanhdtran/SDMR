@@ -64,9 +64,7 @@ class ModelBased(object):
             best_ndcg = 0.0
             best_saved_file = ''
 
-            # if len(os.listdir(args.saved_path)) > 0:
-                # for fname in os.listdir(os.path.join(args.saved_path, '*%s*.chkpt'%args.conv_short_desc)): #must match model architecture
-                # for fname in os.listdir(args.saved_path):
+       
             saved_file_pattern = '%s_%s_%s*'%(args.dataset, args.model, self._make_model_desc(args))
             for filepath in glob.glob(os.path.join(args.saved_path,saved_file_pattern)):
                 # filepath = os.path.join(args.saved_path, fname)
@@ -90,8 +88,7 @@ class ModelBased(object):
             return (best_hits, best_ndcg)
 
         else:
-            #dmr : Deep Metric memory Recommender
-            # print 'here'
+            #sdmr : Deep Metric memory Recommender
             #load best sdp checkpoint
             best_sdp_file = ''
             best_sdp_hits, best_sdp_ndcgs = 0,0
@@ -108,7 +105,6 @@ class ModelBased(object):
                     hits = float(checkpoint['best_hits'])
                     ndcg = float(checkpoint['best_ndcg'])
                     if hits > best_sdp_hits or (hits == best_sdp_hits and ndcg > best_sdp_ndcgs):
-                    # if ndcg > best_sdp_ndcgs or (ndcg == best_sdp_ndcgs and hits > best_sdp_hits):
                         best_sdp_file=filepath
                         best_sdp_hits = hits
                         best_sdp_ndcgs = ndcg
@@ -134,28 +130,24 @@ class ModelBased(object):
                         best_sdm_ndcgs = ndcg
 
 
-            #now loading best checkpoints from sdp and sdm for dmr:
+            #now loading best checkpoints from sdp and sdm for sdmr:
             if best_sdp_file != '':
-                #load checkpoint into cpu
+                #load checkpoint into cpu if not using cuda
                 if args.cuda:
                     checkpoint = torch.load(best_sdp_file)
                 else:
                     checkpoint = torch.load(best_sdp_file, map_location=lambda storage, loc: storage)
                 self._net._sdp.load_state_dict(checkpoint['model'])
-                # self._optimizer.load_state_dict(checkpoint['optimizer'])
+                
                 print("=> loaded checkpoint '{}' (epoch {})"
                                 .format(best_sdp_file, checkpoint['epoch']))
               
-                # no train the sdm and sdp?
+                # no train or re-train the sdm and sdp weights?
                 for params in self._net._sdp.parameters():
                     params.requires_grad = bool(args.sdmr_retrain)
 
-
-                # self._net._sdp._user_embeddings.requires_grad = False
-                # self._net._sdp._item_embeddings.requires_grad = False
-
             if best_sdm_file != '':
-                #load checkpoint into cpu:
+                #load checkpoint into gpu or in cpu if not using cuda
                 if args.cuda:
                     checkpoint = torch.load(best_sdm_file)
                 else:
@@ -168,14 +160,8 @@ class ModelBased(object):
                                  .format(best_sdm_file, checkpoint['epoch']))
                 #no train the sdm and sdp?
                 for params in self._net._sdm.parameters():
-                    params.requires_grad = False
+                    params.requires_grad = bool(args.sdmr_retrain)
 
-                # for A_memory in self._net._sdm.A_memories:
-                #     A_memory._user_embeddings.requires_grad = False
-                #     A_memory._item_embeddings.requires_grad = False
-                # for C_memory in self._net._sdm.C_memories:
-                #     C_memory._user_embeddings.requires_grad = False
-                #     C_memory._item_embeddings.requires_grad = False
             sum_weights = np.concatenate(
                                             (
                                                 (1-args.beta) * my_utils.tensor2numpy(self._net._sdp._sum_func.weight.data),
