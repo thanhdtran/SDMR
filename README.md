@@ -1,6 +1,5 @@
 # SDMR
 This repo contains source code for our paper: "Signed Distance-based Deep Memory Recommender" published in WWW 2019 (TheWebConf 2019).
-This source code is coming soon (expect to be pushed before May 20)!
 
 # DATA FORMAT:
 - Same as "Neural Collaborative Filtering" paper (https://arxiv.org/abs/1708.05031).
@@ -45,3 +44,17 @@ This source code is coming soon (expect to be pushed before May 20)!
 
 ## Running SDMR model on ml1m dataset:
 **python -u main.py --cuda 1 --dataset ml1m --load_best_chkpoint 1 --model sdmr --num_factors 128 --reg_sdm 1e-3 --max_seq_len 5 --n_hops 3 --act_func_sdm tanh --out 1 --reg_sdp 1e-3 --act_func_sdp tanh
+
+# CITATION
+If you see that our paper is helpful or you have used some part of our source code, please cite our paper at:
+
+```
+@article{tran2019signed,
+  title={Signed Distance-based Deep Memory Recommender},
+  author={Tran, Thanh and Liu, Xinyue and Lee, Kyumin and Kong, Xiangnan},
+  year={2019}
+}
+```
+
+Thank you so much and feel free to drop us any question you have. 
+Best regards.
