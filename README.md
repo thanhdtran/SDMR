@@ -6,7 +6,7 @@ This source code is coming soon (expect to be pushed before May 20)!
 - Same as "Neural Collaborative Filtering" paper (https://arxiv.org/abs/1708.05031).
 
 # PARAMETERS:
-- <code>saved_path</code>: the folder to save the checkpoints [Default is <code>chk_points</code>].
+%%- <code>saved_path</code>: the folder to save the checkpoints [Default is <code>chk_points</code>].
 - <code>load_best_chkpoint</code>: whether or not loading the best saved checkpoint [1 = Yes, 0 = No, Default is 0].
 - <code>path</code>: path of the dataset, default is <code>data</code>.
 - <code>dataset</code>: the name of dataset [ml1m or epinions-full].
