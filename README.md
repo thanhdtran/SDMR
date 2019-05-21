@@ -47,10 +47,15 @@ Best result: | test hits@10 = 0.703 | test ndcg@10 = 0.424 | epoch = 48
 **python -u main.py --cuda 1 --dataset epinions-full --load_best_chkpoint 0 --model sdm --num_factors 128 --reg_sdm 1e-3 --max_seq_len 5 --n_hops 4 --act_func_sdm tanh --out 1
 
 ### Some results you may get:
-
+```
+```
 
 ## Running SDM model on ml1m dataset:
 **python -u main.py --cuda 1 --dataset ml1m --load_best_chkpoint 0 --model sdm --num_factors 128 --reg_sdm 1e-3 --max_seq_len 5 --n_hops 3 --act_func_sdm tanh --out 1
+
+### Some results you may get:
+```
+```
 
 ## Running SDMR model on epinions-full dataset:
 **python -u main.py --cuda 1 --dataset epinions-full --load_best_chkpoint 1 --model sdmr --num_factors 128 --reg_sdm 1e-3 --max_seq_len 5 --n_hops 4 --act_func_sdm tanh --out 1 --reg_sdp 1e-3 --act_func_sdp tanh
