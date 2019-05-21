@@ -48,6 +48,7 @@ Best result: | test hits@10 = 0.703 | test ndcg@10 = 0.424 | epoch = 48
 
 ### Some results you may get:
 ```
+Best result: | test hits@10 = 0.590 | test ndcg@10 = 0.388 | epoch = 20
 ```
 
 ## Running SDM model on ml1m dataset:
@@ -55,6 +56,7 @@ Best result: | test hits@10 = 0.703 | test ndcg@10 = 0.424 | epoch = 48
 
 ### Some results you may get:
 ```
+Best result: | test hits@10 = 0.833 | test ndcg@10 = 0.611 | epoch = 40
 ```
 
 ## Running SDMR model on epinions-full dataset:
