@@ -108,8 +108,6 @@ def load_negative_file(filename):
                 negatives.append(int(x))
             uid, iid = arr[0].replace('(','').replace(')','').split(',')
             negativeList.append(negatives)
-            #for j in range(100):
-            #    negatives.append(int(iid))
             line = f.readline()
     return negativeList
 
