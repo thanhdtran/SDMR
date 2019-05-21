@@ -22,8 +22,8 @@ parser.add_argument('--num_factors', default=128, help='number of latent factors
 
 parser.add_argument('--n_hops', default=3, help='number of hops', type=int)
 
-parser.add_argument('--reg_sdp', nargs='?', default='0.00001', help ='Regularization term in SDP model', type=str)
-parser.add_argument('--reg_sdm', nargs='?',  default='0.000001', help ='Regularization term in SDM model', type=str)
+parser.add_argument('--reg_sdp', nargs='?', default='0.001', help ='Regularization term in SDP model', type=str)
+parser.add_argument('--reg_sdm', nargs='?',  default='0.001', help ='Regularization term in SDM model', type=str)
 parser.add_argument('--num_neg', default=4, type=int, help='Number of negative instances for each positive sample')
 parser.add_argument('--lr', default=0.001, type=float, help = 'Learning rate')
 parser.add_argument('--max_seq_len', type=int, default=5, help='maximum number of users/items to represents for a item/user')
