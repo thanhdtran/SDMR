@@ -72,10 +72,12 @@ Best result: | test hits@10 = 0.833 | test ndcg@10 = 0.611 | epoch = 40
 If you see that our paper is helpful or you have used some part of our source code, please cite our paper at:
 
 ```
-@article{tran2019signed,
-  title={Signed Distance-based Deep Memory Recommender},
-  author={Tran, Thanh and Liu, Xinyue and Lee, Kyumin and Kong, Xiangnan},
-  year={2019}
+@inproceedings{tran2019signed,
+	title={Signed Distance-based Deep Memory Recommender},
+	author={Tran, Thanh and Liu, Xinyue and Lee, Kyumin and Kong, Xiangnan},
+	booktitle={WWW},
+	pages={1841--1852},
+	year={2019}
 }
 ```
 
