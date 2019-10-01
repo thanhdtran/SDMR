@@ -73,8 +73,9 @@ class Interactions(object):
         batch_size = len(user_ids)
         seq_len = max_seq_len if max_seq_len != -1 else self._max_len_user_seq
         user_seqs = np.zeros((batch_size, seq_len), dtype=np.int64)
-        user_seq = np.zeros(seq_len, dtype=np.int64)
+        
         for i, (uid, iid) in enumerate(zip(user_ids, item_ids)):
+            user_seq = np.zeros(seq_len, dtype=np.int64)
             key = (uid, iid)
             tmp_seq = self._useritem_prev_items[key]
             if len(tmp_seq) == 0:
